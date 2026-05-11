@@ -1,0 +1,155 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern E-Shop | Gallery</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="{% static 'index.css' %}" />
+  </head>
+  <body class="bg-light" style="font-family: &quot;Inter&quot;, sans-serif">
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm"
+    >
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'ecommerce_home' %}">
+          <i class="bi bi-lightning-charge-fill text-warning"></i> E-SHOP
+        </a>
+        <div class="d-flex align-items-center">
+          <a href="{% url 'cart' %}" class="btn btn-primary position-relative">
+            <i class="bi bi-cart3"></i>
+            {% if count > 0 %}
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            >
+              {{ count }}
+            </span>
+            {% endif %}
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <header class="bg-white py-5 mb-5 border-bottom shadow-sm">
+      <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center">
+          <h1 class="display-4 fw-bolder">New Arrivals</h1>
+          <p class="lead fw-normal text-muted mb-0">
+            Shop the latest trends from FakeStoreAPI
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <div class="container mb-5">
+      <div
+        class="row gx-4 gy-5 row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 justify-content-center"
+      >
+        {% if items %} {% for item in items %}
+        <div class="col">
+          <div class="card h-100 border-0 shadow-sm product-card">
+            <div
+              class="badge bg-dark text-white position-absolute"
+              style="top: 0.5rem; right: 0.5rem"
+            >
+             <a href="{% url 'product_category' item.category %}" class="text-white text-decoration-none">{{ item.category }}</a>
+            </div>
+
+            <div class="p-4" style="height: 200px">
+              <a href="{% url 'product_detail' item.id %}">
+                <img
+                  src="{{ item.image }}"
+                  class="card-img-top h-100 w-100"
+                  alt="{{ item.name }}"
+                  style="object-fit: contain"
+                />
+              </a>
+            </div>
+
+            <div class="card-body p-4 d-flex flex-column">
+              <div class="text-center">
+                <h5 class="fw-bolder text-truncate">{{ item.name }}</h5>
+                <div
+                  class="d-flex justify-content-center small text-warning mb-2"
+                >
+                  <div class="bi-star-fill"></div>
+                  <span class="text-muted ms-1">({{ item.rating }})</span>
+                </div>
+                <div class="fs-5 fw-bold text-primary mb-3">
+                  ${{ item.price }}
+                </div>
+              </div>
+
+              <div class="mt-auto">
+                {% if item.id|stringformat:"s" in cart %}
+                <div class="bg-light p-2 rounded border text-center">
+                  <div class="small fw-bold mb-2 text-success">
+                    In Your Cart
+                  </div>
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <a
+                      href="{% url 'decrement_cart_count' item.id 'ecommerce_home' %}"
+                      class="btn btn-sm btn-outline-secondary"
+                      >-</a
+                    >
+                    <span class="fw-bold">{{ item.qty_in_cart }}</span>
+                    <a
+                      href="{% url 'add_to_cart' item.id 'ecommerce_home' %}"
+                      class="btn btn-sm btn-outline-secondary"
+                      >+</a
+                    >
+                  </div>
+                  <a
+                    href="{% url 'remove_from_cart' item.id 'ecommerce_home' %}"
+                    class="text-danger x-small d-block mt-2"
+                    style="font-size: 0.75rem"
+                    >Remove</a
+                  >
+                </div>
+                {% else %}
+                <div class="text-center">
+                  <a
+                    href="{% url 'add_to_cart' item.id 'ecommerce_home' %}"
+                    class="btn btn-outline-dark mt-auto w-100"
+                  >
+                    <i class="bi bi-cart-plus"></i> Add to Cart
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="col-12 text-center py-5">
+          <h3>No products found.</h3>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">
+          Copyright &copy; Goutham Ramesh Dev Shop 2026
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
